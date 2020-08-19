@@ -311,6 +311,33 @@ def check_for_update(scene=None):
 bpy.app.handlers.load_post.append(check_for_update)
 
 @bpy.app.handlers.persistent
+def check_and_remove_prebuilts(scene=None):
+    '''Ensure pre-builts have been properly removed.
+    '''
+    lib_cc_dir = os.path.join(os.path.dirname(__file__),"library_scripts/Library-Classy_Closets/")
+    closet_prod_dir = os.path.join(lib_cc_dir, "products/Closets/")
+
+    assembly_paths = [
+        os.path.join(closet_prod_dir, "Closet Products - Add Pards","1 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Add Pards","2 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Add Pards","3 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Add Pards","4 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Add Pards","5 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Add Pards","6 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Add Pards","7 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Add Pards","8 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Add Pards","9 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Add Pards","9 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Basic","Toe Kick.blend")
+    ]
+
+    for path in assembly_paths:
+        if os.path.exists(path):
+            os.remove(path)
+ 
+bpy.app.handlers.load_post.append(check_and_remove_prebuilts)
+
+@bpy.app.handlers.persistent
 def refresh_filebrowser(scene=None):
     if not bpy.app.background:
         if "snap_db" in bpy.context.user_preferences.addons.keys():
