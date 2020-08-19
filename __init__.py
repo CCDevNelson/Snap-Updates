@@ -328,6 +328,15 @@ def check_and_remove_prebuilts(scene=None):
         os.path.join(closet_prod_dir, "Closet Products - Add Pards","8 Hanging Opening.blend"),
         os.path.join(closet_prod_dir, "Closet Products - Add Pards","9 Hanging Opening.blend"),
         os.path.join(closet_prod_dir, "Closet Products - Add Pards","9 Hanging Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Uppers","1 Upper Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Uppers","2 Upper Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Uppers","3 Upper Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Uppers","4 Upper Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Uppers","5 Upper Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Uppers","6 Upper Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Uppers","7 Upper Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Uppers","8 Upper Opening.blend"),
+        os.path.join(closet_prod_dir, "Closet Products - Uppers","9 Upper Opening.blend"),
         os.path.join(closet_prod_dir, "Closet Products - Basic","Toe Kick.blend")
     ]
 
