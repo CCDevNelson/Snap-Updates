@@ -108,14 +108,14 @@ class Wood_Drawer_Box(fd_types.Assembly):
         back.prompt('Hide','Hide',[Hide])
         
         bottom = common_parts.add_drawer_bottom(self)
-        bottom.x_loc('IF(Use_Dovetail_Construction,INCH(.375),-INCH(.05))',[Use_Dovetail_Construction,Drawer_Width])
+        bottom.x_loc('IF(Use_Dovetail_Construction,INCH(.375),0)',[Use_Dovetail_Construction,Drawer_Width])
         bottom.y_loc('IF(Use_Dovetail_Construction,INCH(.375),0)',[Use_Dovetail_Construction,Drawer_Width])
         bottom.z_loc('IF(Use_Dovetail_Construction,INCH(.5),-Drawer_Bottom_Thickness)',[Use_Dovetail_Construction,Drawer_Bottom_Thickness])
         bottom.x_rot(value = 0)
         bottom.y_rot(value = 0)
         bottom.z_rot(value = 90)
         bottom.x_dim('IF(Use_Dovetail_Construction,IF(Override_Depth>0,Override_Depth,Drawer_Depth)-INCH(.625),IF(Override_Depth>0,Override_Depth,Drawer_Depth))',[Override_Depth,Use_Dovetail_Construction,Drawer_Depth])
-        bottom.y_dim('IF(Use_Dovetail_Construction,Drawer_Width-INCH(.625),Drawer_Width+INCH(.1))*-1',[Use_Dovetail_Construction,Drawer_Width])
+        bottom.y_dim('IF(Use_Dovetail_Construction,Drawer_Width-INCH(.625),Drawer_Width)*-1',[Use_Dovetail_Construction,Drawer_Width])
         bottom.z_dim('Drawer_Bottom_Thickness',[Drawer_Bottom_Thickness])
         bottom.prompt('Hide','Hide',[Hide])
         

@@ -1615,7 +1615,7 @@ class OPERATOR_genereate_2d_views(bpy.types.Operator):
         wall_assembly_bp = fd_types.Assembly(wall_assembly.obj_bp)
         wall_angle = round(math.degrees(
             wall_assembly_bp.obj_bp.rotation_euler[2]))
-        if len(assembly.prompts) > 0:
+        if len(assembly.all_prompts()) > 0:
             shelves_qty = assembly.get_prompt("Shelf Quantity").value()
             # Add the bottom shelf to the calculation if has shelves
             if shelves_qty > 0:
@@ -1658,7 +1658,7 @@ class OPERATOR_genereate_2d_views(bpy.types.Operator):
         wall_assembly_bp = fd_types.Assembly(wall_assembly.obj_bp)
         wall_angle = round(math.degrees(
             wall_assembly_bp.obj_bp.rotation_euler[2]))
-        if len(assembly.prompts) > 0:
+        if len(assembly.all_prompts()) > 0:
             shelves_qty = assembly.get_prompt("Shelf Quantity").value()
             # Add the bottom shelf to the calculation if has shelves
             if shelves_qty > 0:
@@ -2184,7 +2184,10 @@ class OPERATOR_genereate_2d_views(bpy.types.Operator):
                             assembly_mesh.location = assembly.obj_bp.location
                             assembly_mesh.rotation_euler = assembly.obj_bp.rotation_euler
                             assembly_mesh.mv.type = 'CAGE'
-                            if has_entry and entry_wall_pv:
+                            is_entry_assy = any('Door Frame' in e.name for c in
+                                                obj_bp.children for e in c.children)
+
+                            if is_entry_assy and entry_wall_pv:
                                 self.return_wall_labels(wall.obj_bp, obj_bp)
                                 # Create a break in return wall at entry location
                                 bool_mod_nm = 'MESH.Door Frame.Bool Obj'
@@ -2662,9 +2665,16 @@ class OPERATOR_genereate_2d_views(bpy.types.Operator):
     def create_elv_view_scene(self, context, assembly):
         if assembly.obj_bp and assembly.obj_x and assembly.obj_y and assembly.obj_z:
             grp = bpy.data.groups.new(assembly.obj_bp.mv.name_object)
-            floor_obj = bpy.data.objects['Floor']
-            grp.objects.link(floor_obj)
             new_scene = self.create_new_scene(context, grp, assembly.obj_bp)
+            elv_floor_name = '{} Floor'.format(new_scene.name)
+            [wall_mesh] = [obj for obj in assembly.obj_bp.children if
+                           obj.mv.is_wall_mesh]
+            elv_floor_width = wall_mesh.dimensions.x
+            elv_floor_depth = -wall_mesh.dimensions.y
+            elv_floor_size = (elv_floor_width, elv_floor_depth)
+            elv_floor = utils.create_floor_mesh(elv_floor_name, elv_floor_size)
+            self.copy_world_loc(assembly.obj_bp, elv_floor)
+            self.copy_world_rot(assembly.obj_bp, elv_floor)
 
             self.group_children(grp, assembly.obj_bp)
             # wall_mesh = utils.create_cube_mesh(assembly.obj_bp.mv.name_object,

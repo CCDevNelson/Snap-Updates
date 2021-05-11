@@ -446,14 +446,10 @@ class Closet_Carcass(fd_types.Assembly):
         panel.z_dim('Panel_Thickness',[Panel_Thickness])
         panel.prompt('Left Depth','Depth',[Depth])
         panel.prompt('Right Depth','Next_Depth',[Next_Depth])
-        # panel.prompt('Stop Drilling Bottom
-        # Left','Stop_LB_Left_Opening',[Stop_LB_Left_Opening])
-        # panel.prompt('Stop Drilling Top
-        # Left','Start_LB_Left_Opening',[Start_LB_Left_Opening])
-        # panel.prompt('Stop Drilling Bottom
-        # Right','Stop_LB_Right_Opening',[Stop_LB_Right_Opening])
-        # panel.prompt('Stop Drilling Top
-        # Right','Start_LB_Right_Opening',[Start_LB_Right_Opening])
+        panel.prompt('Stop Drilling Bottom Left','IF(Floor,0,IF(NH>H,H,0))',[H,NH,Floor])
+        panel.prompt('Stop Drilling Top Left','IF(Floor,IF(NH>H,H,0),0)',[Floor,H,NH])
+        panel.prompt('Stop Drilling Bottom Right','IF(Next_Floor,0,IF(H>NH,NH,0))',[H,NH,Next_Floor])
+        panel.prompt('Stop Drilling Top Right','IF(Next_Floor,IF(H>NH,NH,0),0)',[H,NH,Next_Floor])
 
         panel.prompt("Front Chamfer Height",'IF(Dog_Ear_Each,Front_Angle_Height,Front_Angle_Height_All)',[Dog_Ear_Each, Front_Angle_Height_All, Front_Angle_Height])
         panel.prompt("Front Chamfer Depth",'IF(Dog_Ear_Each,Front_Angle_Depth,Front_Angle_Depth_All)',[Dog_Ear_Each, Front_Angle_Depth_All, Front_Angle_Depth])

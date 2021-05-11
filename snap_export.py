@@ -686,10 +686,8 @@ class OPS_Export_XML(Operator):
             width += oversize_width.value()
         if assembly.obj_bp.lm_closets.is_filler_bp:
             width += unit.inch(2)
-        if width < unit.inch(4):
-                width = unit.inch(4)
-        if assembly.obj_bp.lm_closets.is_cleat_bp:
-            width += unit.inch(3)
+            if width < unit.inch(4):
+                    width = unit.inch(4)
 
         if self.is_var_height_toe_kick(assembly):
             #Exclude stringer parts and tk skins
@@ -744,10 +742,6 @@ class OPS_Export_XML(Operator):
             if against_right_wall:
                 if against_right_wall.value():
                     length += unit.inch(3)
-                    if assembly.obj_bp.lm_closets.is_filler_bp(assembly):
-                       width += unit.inch(2)
-                    if width < unit.inch(4):
-                       width = unit.inch(4)
         return self.distance(length)
 
     def get_os_top_shelf_length(self, x):

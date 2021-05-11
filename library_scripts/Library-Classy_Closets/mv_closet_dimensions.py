@@ -1189,6 +1189,17 @@ class OPERATOR_Auto_Dimension(bpy.types.Operator):
                 if cutpart not in skip:
                     self.apply_partition_height_label(cutpart)
 
+    def topshelf_exposed_dim(self, parent, location, rotation):
+        mark = self.add_tagged_dimension(parent)
+        mark.opengl_dim.line_only = True
+        mark.opengl_dim.gl_width = 2
+        mark.anchor.location = location
+        mark.anchor.rotation_euler = rotation
+        mark.end_z(value = unit.inch(3))
+        dim = self.add_tagged_dimension(mark.end_point)
+        dim.start_z(value=unit.inch(1))
+        dim.set_label('Exp.')
+
     def topshelf_depth(self, context, item):
         for n_item in item.children:
             if n_item.lm_closets.is_closet_top_bp:
@@ -1198,6 +1209,10 @@ class OPERATOR_Auto_Dimension(bpy.types.Operator):
                         ts_width = ts_assembly.obj_x.location.x
                         ts_depth = ts_assembly.obj_y.location.y
                         ts_height = ts_assembly.obj_z.location.z
+                        exp_l = ts_assembly.get_prompt('Exposed Left')
+                        exp_r = ts_assembly.get_prompt('Exposed Right')
+                        exp_b = ts_assembly.get_prompt('Exposed Back')
+
                         offset = ts_width / 2
                         location = (unit.inch(
                             1.06) + offset, 0, unit.inch(-1.06) + ts_height)
@@ -1211,7 +1226,22 @@ class OPERATOR_Auto_Dimension(bpy.types.Operator):
                         dim.start_y(value=0)
                         dim.start_z(value=unit.inch(-4))
                         dim.set_label(self.to_inch_lbl(ts_depth))
-    
+
+                        # Exposed Edges
+                        if exp_l and exp_l.value():
+                            exp_loc = (0, 0, ts_height)
+                            exp_rot = (0, math.radians(-135), 0)
+                            self.topshelf_exposed_dim(k_item, exp_loc, exp_rot)
+                        if exp_r and exp_r.value():
+                            exp_loc = (ts_width, 0, ts_height)
+                            exp_rot = (0, math.radians(135), 0)
+                            self.topshelf_exposed_dim(k_item, exp_loc, exp_rot)
+                        if exp_b and exp_b.value():
+                            x_offset = ts_width / 2
+                            exp_loc = (x_offset, 0, ts_height)
+                            exp_rot = (0, math.radians(-135), 0)
+                            self.topshelf_exposed_dim(k_item, exp_loc, exp_rot)
+
     def apply_toe_kick_label(self, context, wall_bp, tk_list):
         for i, tk in enumerate(tk_list):
             label = str(tk) + "\""
@@ -1359,8 +1389,7 @@ class OPERATOR_Auto_Dimension(bpy.types.Operator):
             if pmt_val:
                 lbl = self.add_tagged_dimension(b)
                 lbl.set_label('Db Jwlry')
-                lbl_loc = (lbl_x, 0, lbl_y)
-                self.copy_world_loc(b, lbl.anchor, lbl_loc)
+                lbl.anchor.location = (lbl_x, 0, lbl_y)
                 # Draw an hashmark using OpenGL dimensions
                 hshmk = self.add_tagged_dimension(lbl.anchor)
                 hshmk.opengl_dim.line_only = True

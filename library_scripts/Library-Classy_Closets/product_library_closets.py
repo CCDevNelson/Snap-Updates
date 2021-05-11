@@ -478,7 +478,7 @@ class PRODUCT_Hang_Short_Tall(data_rods_and_shelves.Hanging_Rods_with_Shelves):
                         "Is Hang Single":True,
                         "Is Hang Double":False}
 
-class PRODUCT_Corner_Shelves(data_closet_carcass_corner.L_Shelves):
+class PRODUCT_Corner_Shelves(data_closet_carcass_corner.Corner_Shelves):
     
     def __init__(self):
         props = props_closet.get_scene_props()

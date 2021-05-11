@@ -420,9 +420,10 @@ class OPERATOR_Prepare_Closet_For_Export(bpy.types.Operator):
             
             #ALWAYS DRILL BOTTOM
             if single_sided:
-                if right_depth.value() > 0 or sdbr > 0:
+                if right_depth.value() > 0 or sdbr > 0 or sdtr > 0:
                     obj, token = assembly.add_machine_token('System Holes Right Bottom Front','BORE','5')
                     token.dim_in_y = right_depth.value() - dim_to_front
+                    token.dim_in_x = part_length - macp.dim_to_system_top_hole if sdtr == 0 else sdtr
                     token.end_dim_in_x = macp.dim_to_system_bottom_hole if sdbr == 0 else sdbr
                     token.end_dim_in_y = right_depth.value() - dim_to_front
                     tokens.append(token)
@@ -433,40 +434,46 @@ class OPERATOR_Prepare_Closet_For_Export(bpy.types.Operator):
                     token.end_dim_in_y = dim_to_rear
                     tokens.append(token)
 
-                if left_depth.value() > 0 or sdbl > 0 or sdbr > 0:
+                if left_depth.value() > 0 or sdbl > 0 or sdtl > 0:
                     obj, token = assembly.add_machine_token('System Holes Left Bottom Front','BORE','5')
+                    token.dim_in_x = part_length - macp.dim_to_system_top_hole if sdtl == 0 else sdtl
                     token.dim_in_y = left_depth.value() - dim_to_front
                     token.end_dim_in_x = macp.dim_to_system_bottom_hole if sdbl == 0 else sdbl
                     token.end_dim_in_y = left_depth.value() - dim_to_front
                     tokens.append(token)
                     
                     obj, token = assembly.add_machine_token('System Holes Left Bottom Rear','BORE','5')
+                    token.dim_in_x = part_length - macp.dim_to_system_top_hole if sdtl == 0 else sdtl
                     token.dim_in_y = dim_to_rear
                     token.end_dim_in_x = macp.dim_to_system_bottom_hole if sdbl == 0 else sdbl
                     token.end_dim_in_y = dim_to_rear
                     tokens.append(token)
             else:
-                if right_depth.value() > 0 or sdbr > 0:
+                if right_depth.value() > 0 or sdbr > 0 or sdtr > 0:
                     obj, token = assembly.add_machine_token('System Holes Right Bottom Front','BORE','5')
+                    token.dim_in_x = part_length - macp.dim_to_system_top_hole if sdtr == 0 else sdtr
                     token.dim_in_y = right_depth.value() - dim_to_front
                     token.end_dim_in_x = macp.dim_to_system_bottom_hole if sdbr == 0 else sdbr
                     token.end_dim_in_y = right_depth.value() - dim_to_front
                     tokens.append(token)
                     
                     obj, token = assembly.add_machine_token('System Holes Right Bottom Rear','BORE','5')
+                    token.dim_in_x = part_length - macp.dim_to_system_top_hole if sdtr == 0 else sdtr
                     token.dim_in_y = dim_to_rear
                     token.end_dim_in_x = macp.dim_to_system_bottom_hole if sdbr == 0 else sdbr
                     token.end_dim_in_y = dim_to_rear
                     tokens.append(token)
 
-                if left_depth.value() > 0 or sdbl > 0 or sdbr > 0:
+                if left_depth.value() > 0 or sdbl > 0 or sdbl > 0 or sdtl > 0:
                     obj, token = assembly.add_machine_token('System Holes Left Bottom Front','BORE','6')
+                    token.dim_in_x = part_length - macp.dim_to_system_top_hole if sdtl == 0 else sdtl
                     token.dim_in_y = left_depth.value() - dim_to_front
                     token.end_dim_in_x = macp.dim_to_system_bottom_hole if sdbl == 0 else sdbl
                     token.end_dim_in_y = left_depth.value() - dim_to_front
                     tokens.append(token)
                     
                     obj, token = assembly.add_machine_token('System Holes Left Bottom Rear','BORE','6')
+                    token.dim_in_x = part_length - macp.dim_to_system_top_hole if sdtl == 0 else sdtl
                     token.dim_in_y = dim_to_rear
                     token.end_dim_in_x = macp.dim_to_system_bottom_hole if sdbl == 0 else sdbl
                     token.end_dim_in_y = dim_to_rear
@@ -502,7 +509,7 @@ class OPERATOR_Prepare_Closet_For_Export(bpy.types.Operator):
             #         tokens.append(token)
 
         for token in tokens:
-            token.dim_in_x = part_length - macp.dim_to_system_top_hole
+            #token.dim_in_x = part_length - macp.dim_to_system_top_hole
             token.dim_in_z = macp.system_hole_bore_depth
             token.face_bore_dia = macp.system_hole_dia
             token.distance_between_holes = macp.dim_between_holes
