@@ -881,10 +881,7 @@ class Closet_Carcass(fd_types.Assembly):
         defaults = props_closet.get_scene_props().closet_defaults
         
         self.create_assembly()
-        self.obj_bp.mv.product_type = "Closet"
-        
-        if defaults.export_subassemblies:
-            self.obj_bp.mv.export_product_subassemblies = True            
+        self.obj_bp.mv.product_type = "Closet" 
         
         add_opening_prompts(self)
         add_material_thickness_prompts(self)

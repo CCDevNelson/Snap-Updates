@@ -372,6 +372,7 @@ class Closet_Island_Carcass(fd_types.Assembly):
         melamine_deck.prompt("Exposed Left","IF(Left_Against_Wall,False,True)",[Left_Against_Wall])
         melamine_deck.prompt("Exposed Right","IF(Right_Against_Wall,False,True)",[Right_Against_Wall])
         melamine_deck.prompt("Exposed Back","Exposed_Back",[Exposed_Back])
+        melamine_deck.obj_bp.lm_closets.is_countertop_bp = True
         for child in melamine_deck.obj_bp.children:
             if child.cabinetlib.type_mesh == 'CUTPART':
                 for mat_slot in child.cabinetlib.material_slots:
@@ -570,9 +571,7 @@ class Closet_Island_Carcass(fd_types.Assembly):
         self.obj_bp.mv.product_type = "Closet"
         product_props = props_closet.get_object_props(self.obj_bp)
         product_props.is_island = True
-        
-        if defaults.export_subassemblies:
-            self.obj_bp.mv.export_product_subassemblies = True      
+
         
         self.add_tab(name='Opening Widths',tab_type='CALCULATOR',calc_type="XDIM") #0
         self.add_tab(name='Carcass Options',tab_type='VISIBLE') #1

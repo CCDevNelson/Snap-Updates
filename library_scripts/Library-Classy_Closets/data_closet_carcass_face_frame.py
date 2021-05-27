@@ -953,9 +953,6 @@ class Closet_Carcass(fd_types.Assembly):
         self.create_assembly()
         self.obj_bp.mv.product_type = "Closet"
         
-        if defaults.export_subassemblies:
-            self.obj_bp.mv.export_product_subassemblies = True            
-        
         product_props = props_closet.get_object_props(self.obj_bp)
         product_props.is_closet = True
         

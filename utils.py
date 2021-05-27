@@ -5,7 +5,7 @@ Utility Functions
 import bpy
 import os
 import math
-from mv import utils, unit
+from mv import utils, unit, fd_types
 import snap_db
 
 def update_file_browser_space(context,path):
@@ -217,6 +217,16 @@ def get_part_thickness(obj):
             for child in obj.parent.children:
                 if child.mv.type == 'VPDIMZ':
                     return math.fabs(child.location.z)
+
+        if obj_props.is_cover_cleat_bp:
+            cover_cleat = fd_types.Assembly(obj.parent)
+            closet_materials = bpy.context.scene.db_materials
+            mat_sku = closet_materials.get_mat_sku(obj.parent, cover_cleat)
+            mat_inventory_name = closet_materials.get_mat_inventory_name(sku=mat_sku)
+            if(mat_inventory_name == "Oxford White" or mat_inventory_name == "Cabinet Almond" or mat_inventory_name == "Duraply Almond" or mat_inventory_name == "Duraply White"):
+                return math.fabs(unit.inch(0.38))
+            else:
+                return math.fabs(unit.inch(0.75))
 
     if obj.cabinetlib.type_mesh == 'CUTPART':
         spec_group = bpy.context.scene.mv.spec_groups[obj.cabinetlib.spec_group_index]

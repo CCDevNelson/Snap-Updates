@@ -99,6 +99,8 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
         Shelf_Clip_Gap = self.get_var("Shelf Clip Gap")
         Shelf_Setback = self.get_var("Shelf Setback")
 
+        SBS = self.get_var("Shelf Backing Setback", 'SBS')
+
         Is_Hang_Single = self.get_var("Is Hang Single")
 
         ATSS = self.get_var("Add Top Shelf Setback", 'ATSS')
@@ -123,7 +125,7 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
 
         adj_shelf.x_loc('IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap)', [
                         Is_Locked_Shelf, Adj_Shelf_Clip_Gap])
-        adj_shelf.y_loc('Depth', [Depth])
+        adj_shelf.y_loc('Depth - SBS', [Depth,SBS])
         adj_shelf.z_loc(top_opening_z_loc + "+(" + top_opening_height + "-" + top_opening_thickness_deduction + ")/" + top_opening_qty,
                         [Top_Rod_Location, Shelf_Thickness, Height, Top_Shelf_Quantity])
         adj_shelf.x_rot(value=0)
@@ -131,8 +133,8 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
         adj_shelf.z_rot(value=0)
         adj_shelf.x_dim('Width-IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap*2)',
                         [Width, Is_Locked_Shelf, Adj_Shelf_Clip_Gap])
-        adj_shelf.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ATSS',
-                        [Depth, Locked_Shelf_Setback, Is_Locked_Shelf, Adj_Shelf_Setback, ATSS])
+        adj_shelf.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ATSS+SBS',
+                        [Depth, Locked_Shelf_Setback, Is_Locked_Shelf, Adj_Shelf_Setback, ATSS, SBS])
         adj_shelf.z_dim('Shelf_Thickness', [Shelf_Thickness])
         adj_shelf.prompt('Hide', 'IF(AND(Top_Shelf_Quantity>0,Add_Shelves_In_Top_Section),False,True)',
                          [Top_Shelf_Quantity, Add_Shelves_In_Top_Section])
@@ -155,7 +157,7 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
 
         adj_shelf.x_loc('IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap)', [
                         Is_Locked_Shelf, Adj_Shelf_Clip_Gap])
-        adj_shelf.y_loc('Depth', [Depth])
+        adj_shelf.y_loc('Depth-SBS', [Depth,SBS])
         adj_shelf.z_loc(mid_opening_z_loc + "+(" + mid_opening_height + "-" + mid_opening_thickness_deduction + ")/" + mid_opening_qty,
                         [Bottom_Rod_Location, Top_Rod_Location, Shelf_Thickness, Height, Middle_Shelf_Quantity])
         adj_shelf.x_rot(value=0)
@@ -163,8 +165,8 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
         adj_shelf.z_rot(value=0)
         adj_shelf.x_dim('Width-IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap*2)',
                         [Width, Is_Locked_Shelf, Adj_Shelf_Clip_Gap])
-        adj_shelf.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+AMSS',
-                        [Depth, Locked_Shelf_Setback, Is_Locked_Shelf, Adj_Shelf_Setback, AMSS])
+        adj_shelf.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+AMSS+SBS',
+                        [Depth, Locked_Shelf_Setback, Is_Locked_Shelf, Adj_Shelf_Setback, AMSS, SBS])
         adj_shelf.z_dim('Shelf_Thickness', [Shelf_Thickness])
         adj_shelf.prompt('Hide', 'IF(Is_Hang_Single,True,IF(AND(Middle_Shelf_Quantity>0,Add_Shelves_In_Middle_Section),False,True))',
                          [Middle_Shelf_Quantity, Add_Shelves_In_Middle_Section, Is_Hang_Single])
@@ -187,7 +189,7 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
 
         short_adj_shelf.x_loc('IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap)', [
                               Is_Locked_Shelf, Adj_Shelf_Clip_Gap])
-        short_adj_shelf.y_loc('Depth', [Depth])
+        short_adj_shelf.y_loc('Depth-SBS', [Depth,SBS])
         short_adj_shelf.z_loc(short_mid_opening_z_loc + "+(" + short_mid_opening_height + "-" + short_mid_opening_thickness_deduction + ")/" + short_mid_opening_qty,
                               [Bottom_Rod_Location, Top_Rod_Location, Shelf_Thickness, Height, Middle_Shelf_Quantity])
         short_adj_shelf.x_rot(value=0)
@@ -195,8 +197,8 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
         short_adj_shelf.z_rot(value=0)
         short_adj_shelf.x_dim('Width-IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap*2)',
                               [Width, Is_Locked_Shelf, Adj_Shelf_Clip_Gap])
-        short_adj_shelf.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+AMSS', [
-                              Depth, Locked_Shelf_Setback, Is_Locked_Shelf, Adj_Shelf_Setback, AMSS])
+        short_adj_shelf.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+AMSS+SBS', [
+                              Depth, Locked_Shelf_Setback, Is_Locked_Shelf, Adj_Shelf_Setback, AMSS, SBS])
         short_adj_shelf.z_dim('Shelf_Thickness', [Shelf_Thickness])
         short_adj_shelf.prompt('Hide', 'IF(Is_Hang_Single, IF(AND(Middle_Shelf_Quantity>0,Add_Shelves_In_Middle_Section),False,True),True)',
                                [Middle_Shelf_Quantity, Add_Shelves_In_Middle_Section, Is_Hang_Single])
@@ -219,14 +221,14 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
 
         adj_shelf.x_loc('IF(Is_Locked_Shelf,0,Shelf_Clip_Gap)',
                         [Is_Locked_Shelf, Shelf_Clip_Gap])
-        adj_shelf.y_loc('Depth', [Depth])
+        adj_shelf.y_loc('Depth-SBS', [Depth, SBS])
         adj_shelf.z_loc(bottom_opening_z_loc + "+(" + bottom_opening_height + "-" + bottom_opening_thickness_deduction + ")/" + bottom_opening_qty,
                         [Bottom_Shelves_Location,Bottom_Rod_Location,Shelf_Thickness,Height,Bottom_Shelf_Quantity])
         adj_shelf.x_rot(value = 0)
         adj_shelf.y_rot(value = 0)
         adj_shelf.z_rot(value = 0)
         adj_shelf.x_dim('Width-IF(Is_Locked_Shelf,0,Shelf_Clip_Gap*2)',[Width,Is_Locked_Shelf,Shelf_Clip_Gap])
-        adj_shelf.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ABSS',[Depth,Locked_Shelf_Setback,Is_Locked_Shelf,Adj_Shelf_Setback,ABSS])
+        adj_shelf.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ABSS+SBS',[Depth,Locked_Shelf_Setback,Is_Locked_Shelf,Adj_Shelf_Setback,ABSS,SBS])
         adj_shelf.z_dim('Shelf_Thickness',[Shelf_Thickness])
         adj_shelf.prompt('Hide','IF(AND(Bottom_Shelf_Quantity>0,Add_Shelves_In_Bottom_Section),False,True)',
                          [Bottom_Shelf_Quantity,Add_Shelves_In_Bottom_Section])
@@ -264,13 +266,13 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
             Shelf_Setback = self.get_var("Below Shelf " + str(i) + " Setback", 'Shelf_Setback')
             
             splitter.x_loc('IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap)',[Is_Locked_Shelf,Adj_Shelf_Clip_Gap])
-            splitter.y_loc('Depth',[Depth])
+            splitter.y_loc('Depth-SBS',[Depth,SBS])
             splitter.z_loc('sh_z_loc',[sh_z_loc])
             splitter.x_rot(value = 0)
             splitter.y_rot(value = 0)
             splitter.z_rot(value = 0)
             splitter.x_dim('Width-IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap*2)',[Width,Is_Locked_Shelf,Adj_Shelf_Clip_Gap])
-            splitter.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+Shelf_Setback',[Depth,Locked_Shelf_Setback,Is_Locked_Shelf,Adj_Shelf_Setback,Shelf_Setback])
+            splitter.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+Shelf_Setback+SBS',[Depth,Locked_Shelf_Setback,Is_Locked_Shelf,Adj_Shelf_Setback,Shelf_Setback,SBS])
             splitter.z_dim('Shelf_Thickness',[Shelf_Thickness])
             splitter.prompt('Hide','IF(Add_Below_Shelves,IF(Below_Shelf_Quantity+1>'+str(i)+',False,True),True)',[Add_Below_Shelves,Below_Shelf_Quantity])
             
@@ -287,6 +289,8 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
         Add_Top_Shelf = self.get_var("Add Top Shelf")
         Add_Bottom_Shelf = self.get_var("Add Bottom Shelf")
         Shelf_Setback = self.get_var("Shelf Setback")
+
+        SBS = self.get_var("Shelf Backing Setback", 'SBS')
 
         IHD = self.get_var("Is Hang Double", 'IHD')
         DDS = self.get_var("Default Deep Setback", 'DDS')
@@ -308,14 +312,14 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
 
         shelf.x_loc('IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap)',
                     [Adj_Shelf_Clip_Gap, Is_Locked_Shelf])
-        shelf.y_loc('Depth', [Depth])
+        shelf.y_loc('Depth-SBS', [Depth,SBS])
         shelf.z_loc('Height-Top_Rod_Location+0.064008',
                     [Height, Top_Rod_Location])
         shelf.x_dim('Width-IF(Is_Locked_Shelf,0,(Adj_Shelf_Clip_Gap*2))',
                     [Width, Adj_Shelf_Clip_Gap, Is_Locked_Shelf])
 
-        shelf.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ATSS',
-                    [Depth, Locked_Shelf_Setback, Is_Locked_Shelf, Adj_Shelf_Setback, ATSS])
+        shelf.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ATSS+SBS',
+                    [Depth, Locked_Shelf_Setback, Is_Locked_Shelf, Adj_Shelf_Setback, ATSS,SBS])
         shelf.z_dim('-Shelf_Thickness', [Shelf_Thickness])
         shelf.prompt('Hide', 'IF(Add_Top_Shelf,False,True)', [Add_Top_Shelf])
 
@@ -327,13 +331,13 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
 
         shelf.x_loc('IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap)',
                     [Adj_Shelf_Clip_Gap, Is_Locked_Shelf])
-        shelf.y_loc('Depth', [Depth])
+        shelf.y_loc('Depth-SBS', [Depth,SBS])
         shelf.z_loc('Height-Bottom_Rod_Location+0.064008',
                     [Height, Bottom_Rod_Location])
         shelf.x_dim('Width-IF(Is_Locked_Shelf,0,(Adj_Shelf_Clip_Gap*2))',
                     [Width, Adj_Shelf_Clip_Gap, Is_Locked_Shelf])
-        shelf.y_dim('IF(IHD,IF(Depth>=EDP,-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ABDSS,-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ABSS),-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ABSS)',
-                    [Depth, Locked_Shelf_Setback, Is_Locked_Shelf, Adj_Shelf_Setback, ABSS, IHD, DDS, EDP, ABDSS])
+        shelf.y_dim('IF(IHD,IF(Depth>=EDP,-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ABDSS,-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ABSS),-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+ABSS)+SBS',
+                    [Depth, Locked_Shelf_Setback, Is_Locked_Shelf, Adj_Shelf_Setback, ABSS, IHD, DDS, EDP, ABDSS, SBS])
         shelf.z_dim('Shelf_Thickness', [Shelf_Thickness])
         shelf.prompt('Hide', 'IF(Add_Bottom_Shelf,False,True)',
                      [Add_Bottom_Shelf])
@@ -393,6 +397,7 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
         self.add_prompt(name="Default Deep Setback",prompt_type='DISTANCE',value=unit.inch(12),tab_index=0)
         self.add_prompt(name="Extra Deep Pard",prompt_type='DISTANCE',value=unit.inch(16),tab_index=0)
         self.add_prompt(name="Add Deep Rod Setback",prompt_type='DISTANCE',value=unit.inch(0),tab_index=0)
+        self.add_prompt(name="Shelf Backing Setback",prompt_type='DISTANCE',value=unit.inch(0),tab_index=0)
         
         sgi = self.get_var('cabinetlib.spec_group_index','sgi')
         self.prompt("Shelf Thickness", 'THICKNESS(sgi,"Shelf")',[sgi])
@@ -425,6 +430,8 @@ class Hanging_Rods_with_Shelves(fd_types.Assembly):
                      location="BOT", is_hanger=True)
 
         self.add_shelves()
+        props = props_closet.get_object_props(self.obj_bp)
+        props.is_shelf_and_rod_bp = True
 
         self.update()
 

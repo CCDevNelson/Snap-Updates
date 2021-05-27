@@ -266,6 +266,7 @@ class Drawer_Stack(fd_types.Assembly):
     def draw(self):
         self.create_assembly()
         self.obj_bp.mv.export_as_subassembly = True
+        self.obj_bp.lm_closets.export_nested_subassemblies = True
         
         props = props_closet.get_object_props(self.obj_bp)
         props.is_drawer_stack_bp = True
@@ -353,7 +354,7 @@ class Drawer_Stack(fd_types.Assembly):
         )
         
         self.prompt('Drawer Stack Height',
-                    'df1+IF(dq>1,df2+hg,0)+IF(dq>2,df3+hg,0)+IF(dq>3,df4+hg,0)+IF(dq>4,df5+hg,0)+IF(dq>5,df6+hg,0)+IF(dq>6,df7+hg,0)+IF(dq>7,df8+hg,0)-Bottom_Overlay+MILLIMETER(.85688)', # ? Change height to allow correct door heights
+                    'df1+IF(dq>1,df2+hg,0)+IF(dq>2,df3+hg,0)+IF(dq>3,df4+hg,0)+IF(dq>4,df5+hg,0)+IF(dq>5,df6+hg,0)+IF(dq>6,df7+hg,0)+IF(dq>7,df8+hg,0)-(Bottom_Overlay*2)+(MILLIMETER(.85688)*2)', # ? Change height to allow correct door heights
                     [df1,df2,df3,df4,df5,df6,df7,df8,dq,hg,Bottom_Overlay])
         
         self.add_drawers()

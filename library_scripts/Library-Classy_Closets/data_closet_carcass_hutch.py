@@ -456,10 +456,7 @@ class Hutch(fd_types.Assembly):
         self.obj_bp.mv.product_type = "Closet"
         props = props_closet.get_object_props(self.obj_bp)
         props.is_closet = True
-        props.is_hutch = True
-        
-        if defaults.export_subassemblies:
-            self.obj_bp.mv.export_product_subassemblies = True              
+        props.is_hutch = True          
         
         self.add_prompt_tabs()
         self.add_carcass_prompts()

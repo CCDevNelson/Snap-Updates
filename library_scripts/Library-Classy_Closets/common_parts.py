@@ -85,6 +85,7 @@ def add_panel(assembly):
     panel.add_prompt(name="Stop Drilling Bottom Right",prompt_type='DISTANCE',value=0,tab_index=0)
     panel.add_prompt(name="Stop Drilling Top Right",prompt_type='DISTANCE',value=0,tab_index=0)
     panel.add_prompt(name="Place Hanging Hardware On Right",prompt_type='CHECKBOX',value=False,tab_index=0)
+    panel.add_prompt(name="Exposed Bottom",prompt_type='CHECKBOX',value=False,tab_index=0)
     panel.add_prompt(name="CatNum",prompt_type='NUMBER',value=0,tab_index=0)
     panel.cutpart("Panel")
     panel.edgebanding("Edge",l2 = True)

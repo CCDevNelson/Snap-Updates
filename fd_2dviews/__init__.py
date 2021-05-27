@@ -2866,14 +2866,14 @@ class OPERATOR_genereate_2d_views(bpy.types.Operator):
                     and 'Accordion' not in c.name]
         cam_heights = [e.location.z for e in elv_cams]
         ortho_scales = [e.data.ortho_scale for e in elv_cams]
-        avg_height = sum(cam_heights)/len(cam_heights)
-        max_ortho_scale = max(ortho_scales)
-        for e in elv_cams:
-            e.location.z = avg_height
-            e.data.ortho_scale = max_ortho_scale
+        if len(cam_heights) > 0:
+            avg_height = sum(cam_heights)/len(cam_heights)
+            max_ortho_scale = max(ortho_scales)
+            for e in elv_cams:
+                e.location.z = avg_height
+                e.data.ortho_scale = max_ortho_scale
 
     def execute(self, context):
-        bpy.ops.fd_scene.clear_2d_views()
         self.ignore_obj_list = []
         dimprops = get_dimension_props()
         group_walls = {}
@@ -2933,9 +2933,9 @@ class OPERATOR_genereate_2d_views(bpy.types.Operator):
                         walls.append((wall, left_wall))
                         wall_groups[wall.obj_bp.name] = wall_group
                         group_walls[wall_group.name] = wall.obj_bp.name
-            joints = self.process_connected_walls(context, walls)
-            cross_section_parts = self.add_wall_joints_to_grp(
-                context, wall_groups, joints)
+                        joints = self.process_connected_walls(context, walls)
+                        cross_section_parts = self.add_wall_joints_to_grp(
+                            context, wall_groups, joints)
 
         self.clear_unused_linestyles()
         bpy.context.screen.scene = self.main_scene

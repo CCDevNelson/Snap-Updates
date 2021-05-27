@@ -200,7 +200,31 @@ class PROPERTIES_Closet_Materials(bpy.types.PropertyGroup):
         else:
             print("Multiple SKUs found for - Edge Type Code: {} Color Code: {}".format(type_code, color_code))
             print(sku)
-            return "Unknown"        
+            return "Unknown"  
+
+    def get_secondary_edge_sku(self, obj=None, assembly=None, part_name=None):
+        type_code = self.secondary_edges.get_edge_type().type_code
+        color_code = self.secondary_edges.get_edge_color().color_code
+        obj_props = assembly.obj_bp.lm_closets         
+
+        sku = snap_db.query_db(
+            "SELECT\
+                SKU\
+            FROM\
+                CCItems\
+            WHERE ProductType = 'EB' AND TypeCode = '{type_code}' AND ColorCode = '{color_code}';\
+            ".format(type_code=type_code, color_code=color_code)
+        )
+
+        if len(sku) == 0:
+            print("No SKU found for - Edge Type Code: {} Color Code: {}".format(type_code, color_code))
+            return "Unknown"
+        elif len(sku) == 1:
+            return sku[0][0]
+        else:
+            print("Multiple SKUs found for - Edge Type Code: {} Color Code: {}".format(type_code, color_code))
+            print(sku)
+            return "Unknown"      
 
     def get_edge2_type_name(self):
         name = "Unknown"

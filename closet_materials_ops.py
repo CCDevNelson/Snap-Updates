@@ -250,15 +250,33 @@ class OPERATOR_Assign_Materials(bpy.types.Operator):
                 props = assembly.obj_bp.lm_closets
 
                 if props.is_panel_bp:
-                    # What is 37.47 inch?
-                    if assembly.obj_x.location.x > unit.inch(37.47):
-                        for child in assembly.obj_bp.children:
-                            if child.cabinetlib.type_mesh == 'CUTPART':
-                                child.mv.edge_w1 = ''
-                                child.mv.edge_w2 = ''
-                                for mat_slot in child.cabinetlib.material_slots:
-                                    if mat_slot.name == 'TopBottomEdge':
-                                        mat_slot.pointer_name = "Core"
+                    if assembly.obj_x.location.x > unit.inch(46.11): #36H or lower have to be edgebanded, but 46.10 doesn't work, so I made it 46.11 and now it does
+                        exposed_bottom = assembly.get_prompt("Exposed Bottom")
+                        if exposed_bottom:
+                            if exposed_bottom.value():
+                                for child in assembly.obj_bp.children:
+                                    if child.cabinetlib.type_mesh == 'CUTPART':
+                                        child.mv.edge_w1 = 'Edge_2'
+                                        child.mv.edge_w2 = 'Edge_2'
+                                        for mat_slot in child.cabinetlib.material_slots:
+                                            if mat_slot.name == 'TopBottomEdge':
+                                                mat_slot.pointer_name = "Closet_Part_Edges_Secondary"
+                            else:
+                                for child in assembly.obj_bp.children:
+                                    if child.cabinetlib.type_mesh == 'CUTPART':
+                                        child.mv.edge_w1 = ''
+                                        child.mv.edge_w2 = ''
+                                        for mat_slot in child.cabinetlib.material_slots:
+                                            if mat_slot.name == 'TopBottomEdge':
+                                                mat_slot.pointer_name = "Core"
+                        else:
+                            for child in assembly.obj_bp.children:
+                                if child.cabinetlib.type_mesh == 'CUTPART':
+                                    child.mv.edge_w1 = ''
+                                    child.mv.edge_w2 = ''
+                                    for mat_slot in child.cabinetlib.material_slots:
+                                        if mat_slot.name == 'TopBottomEdge':
+                                            mat_slot.pointer_name = "Core"
                     else:
                         for child in assembly.obj_bp.children:
                             if child.cabinetlib.type_mesh == 'CUTPART':

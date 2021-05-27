@@ -35,6 +35,8 @@ class Vertical_Splitters(fd_types.Assembly):
         self.add_prompt(name="Remove Bottom Shelf",prompt_type='CHECKBOX',value=False,tab_index=1)
         self.add_prompt(name="Shelf Quantity",prompt_type='QUANTITY',value=5,tab_index=1)
         self.add_prompt(name="Evenly Spaced Shelves",prompt_type='CHECKBOX',value=True ,tab_index=1)
+        self.add_prompt(name="Shelf Backing Setback",prompt_type='DISTANCE',value=unit.inch(0),tab_index=1)
+        self.add_prompt(name="Parent Has Bottom KD",prompt_type='CHECKBOX',value=False,tab_index=1)
         
         sgi = self.get_var('cabinetlib.spec_group_index','sgi')
         Thickness = self.get_var('Thickness')
@@ -97,20 +99,22 @@ class Vertical_Splitters(fd_types.Assembly):
         Thickness = self.get_var('Thickness')
         Remove_Bottom_Shelf = self.get_var('Remove Bottom Shelf')
         Shelf_Quantity =self.get_var('Shelf Quantity')
+        Shelf_Backing_Setback = self.get_var("Shelf Backing Setback")
+        Parent_Has_Bottom_KD = self.get_var("Parent Has Bottom KD")
         
         previous_splitter = None
         
         bottom_shelf = common_parts.add_shelf(self)
         bottom_shelf.x_loc(value = 0)
-        bottom_shelf.y_loc('Depth',[Depth])
+        bottom_shelf.y_loc('Depth-Shelf_Backing_Setback',[Depth,Shelf_Backing_Setback])
         bottom_shelf.z_loc(value = 0)
         bottom_shelf.x_rot(value = 0)
         bottom_shelf.y_rot(value = 0)
         bottom_shelf.z_rot(value = 0)
         bottom_shelf.x_dim('Width',[Width])
-        bottom_shelf.y_dim('-Depth',[Depth])
+        bottom_shelf.y_dim('-Depth+Shelf_Backing_Setback',[Depth,Shelf_Backing_Setback])
         bottom_shelf.z_dim('-Thickness',[Thickness])
-        bottom_shelf.prompt('Hide','IF(Remove_Bottom_Shelf,True,False)',[Remove_Bottom_Shelf])
+        bottom_shelf.prompt('Hide','IF(Parent_Has_Bottom_KD,True,IF(Remove_Bottom_Shelf,True,False))',[Remove_Bottom_Shelf,Parent_Has_Bottom_KD])
         bottom_shelf.prompt('Is Locked Shelf',value=True)
         
         for i in range(1,16):
@@ -129,7 +133,7 @@ class Vertical_Splitters(fd_types.Assembly):
             Shelf_Setback = self.get_var("Shelf " + str(i) + " Setback", 'Shelf_Setback')
             
             splitter.x_loc('IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap)',[Is_Locked_Shelf,Adj_Shelf_Clip_Gap])
-            splitter.y_loc('Depth',[Depth])
+            splitter.y_loc('Depth-Shelf_Backing_Setback',[Depth,Shelf_Backing_Setback])
             if previous_splitter:
                 splitter.z_loc('Previous_Z_Loc+Opening_Height',[Opening_Height,Previous_Z_Loc])
             else:
@@ -138,7 +142,7 @@ class Vertical_Splitters(fd_types.Assembly):
             splitter.y_rot(value = 0)
             splitter.z_rot(value = 0)
             splitter.x_dim('Width-IF(Is_Locked_Shelf,0,Adj_Shelf_Clip_Gap*2)',[Width,Is_Locked_Shelf,Adj_Shelf_Clip_Gap])
-            splitter.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+Shelf_Setback',[Depth,Locked_Shelf_Setback,Is_Locked_Shelf,Adj_Shelf_Setback,Shelf_Setback])
+            splitter.y_dim('-Depth+IF(Is_Locked_Shelf,Locked_Shelf_Setback,Adj_Shelf_Setback)+Shelf_Setback+Shelf_Backing_Setback',[Depth,Locked_Shelf_Setback,Is_Locked_Shelf,Adj_Shelf_Setback,Shelf_Setback,Shelf_Backing_Setback])
             splitter.z_dim('-Thickness',[Thickness])
             splitter.prompt('Hide','IF(Shelf_Quantity+1>'+str(i)+',False,True)',[Shelf_Quantity])
             
@@ -437,6 +441,25 @@ class PROMPTS_Vertical_Splitter_Prompts(bpy.types.Operator):
         props = props_closet.get_scene_props()
         self.update_openings()
         self.set_prompts_from_properties()
+
+        opening = self.assembly.obj_bp.mv.opening_name
+        parent_obj = self.assembly.obj_bp.parent
+        parent_assembly = fd_types.Assembly(parent_obj)
+        parent_remove_bottom_shelf = parent_assembly.get_prompt('Remove Bottom Hanging Shelf ' + str(opening))
+        floor = parent_assembly.get_prompt("Opening " + str(opening) + " Floor Mounted")
+        remove_bottom_shelf = self.assembly.get_prompt("Remove Bottom Shelf")
+        parent_has_bottom_kd  = self.assembly.get_prompt("Parent Has Bottom KD")
+        prompts = [parent_remove_bottom_shelf,remove_bottom_shelf,floor,parent_has_bottom_kd]
+
+        if all(prompts):
+            parent_has_bottom_kd.set_value(True)
+            if floor.value():
+                remove_bottom_shelf.set_value(False)
+            elif remove_bottom_shelf.value():
+                parent_remove_bottom_shelf.set_value(False)
+            else:
+                parent_remove_bottom_shelf.set_value(True)
+
         utils.run_calculators(self.assembly.obj_bp)
         props_closet.update_render_materials(self,context)
         return True
@@ -553,6 +576,23 @@ class PROMPTS_Vertical_Splitter_Prompts(bpy.types.Operator):
         obj_insert_bp = utils.get_bp(obj,'INSERT')
         self.assembly = self.get_splitter(obj_insert_bp)
         self.set_properties_from_prompts()
+
+        opening = self.assembly.obj_bp.mv.opening_name
+        parent_obj = self.assembly.obj_bp.parent
+        parent_assembly = fd_types.Assembly(parent_obj)
+        parent_remove_bottom_shelf = parent_assembly.get_prompt('Remove Bottom Hanging Shelf ' + str(opening))
+        floor = parent_assembly.get_prompt("Opening " + str(opening) + " Floor Mounted")
+        remove_bottom_shelf = self.assembly.get_prompt("Remove Bottom Shelf")
+        parent_has_bottom_kd  = self.assembly.get_prompt("Parent Has Bottom KD")
+        prompts = [parent_remove_bottom_shelf,floor,remove_bottom_shelf,parent_has_bottom_kd]
+
+        if all(prompts):
+            parent_has_bottom_kd.set_value(True)
+            if floor.value() or parent_remove_bottom_shelf.value():
+                remove_bottom_shelf.set_value(False)
+            else:
+                remove_bottom_shelf.set_value(True)
+
         wm = context.window_manager
         return wm.invoke_props_dialog(self, width=330)
     
@@ -841,6 +881,17 @@ class OPS_Vertical_Splitters_Drop(bpy.types.Operator):
                         width = closet_assembly.get_prompt("Opening " + self.insert.obj_bp.mv.opening_name + " Width")
                         if(width):
                             opening_width = width.value()
+
+                        parent_remove_bottom_shelf = closet_assembly.get_prompt('Remove Bottom Hanging Shelf ' + str(self.insert.obj_bp.mv.opening_name))
+                        remove_bottom_shelf = self.insert.get_prompt("Remove Bottom Shelf")
+                        parent_has_bottom_kd  = self.insert.get_prompt("Parent Has Bottom KD")
+                        prompts = [parent_remove_bottom_shelf,remove_bottom_shelf,parent_has_bottom_kd]
+                        if all(prompts):
+                            parent_has_bottom_kd.set_value(True)
+                            if remove_bottom_shelf.value():
+                                parent_remove_bottom_shelf.set_value(False)
+                            else:
+                                parent_remove_bottom_shelf.set_value(True)
 
                     # THIS NEEDS TO BE RUN TWICE TO AVOID RECAL ERRORS
                     utils.run_calculators(self.insert.obj_bp)

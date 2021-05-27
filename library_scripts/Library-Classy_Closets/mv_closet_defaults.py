@@ -1128,6 +1128,13 @@ class PROPERTIES_Scene_Variables(PropertyGroup):
             options.draw_hardware_options(box)
     
 class PROPERTIES_Object_Properties(PropertyGroup):
+
+    # TODO: 2.0 - move this to snap object props
+    export_nested_subassemblies = BoolProperty(
+        name="Export Nested Subassemblies",
+        description="If this is true then the assembly will export any nested assemblies",
+        default=False
+        )    
     
     is_temp_obj = BoolProperty(name="Is Temp Object",
                                description="Is temp object that should be removed before calculating price",
@@ -1286,6 +1293,10 @@ class PROPERTIES_Object_Properties(PropertyGroup):
                                description="Used to determine if the assembly is a door striker",
                                default=False)    
     
+    is_shelf_and_rod_bp = BoolProperty(name="Is Shelf and Rod Base Point",
+                               description="Used to determine if the assembly is a shelf and rod assembly",
+                               default=False)  
+
     is_shelf_and_rod_cleat_bp = BoolProperty(name="Is Shelf and Rod Cleat Base Point",
                                description="Used to determine if the assembly is a cleat",
                                default=False)    

@@ -1,3 +1,4 @@
+
 # ##### BEGIN GPL LICENSE BLOCK #####
 #
 #  This program is free software; you can redistribute it and/or
@@ -761,9 +762,7 @@ class OPS_clear_2d_views(Operator):
         orphans = [[coll, obj] for coll in data_colls for obj in coll
                     if obj.users == 0]
         if len(orphans) > 0:
-            while len(orphans) > 0:
-                ls_item = orphans.pop()
-                blr_data, obj = ls_item[0], ls_item[1]
+            for blr_data, obj in orphans:
                 blr_data.remove(obj, do_unlink = True)
             self.clear_orphan_data()
         else:
