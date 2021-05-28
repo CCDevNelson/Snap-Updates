@@ -2874,6 +2874,8 @@ class OPERATOR_genereate_2d_views(bpy.types.Operator):
                 e.data.ortho_scale = max_ortho_scale
 
     def execute(self, context):
+        if not self.use_single_scene:
+            bpy.ops.fd_scene.clear_2d_views()        
         self.ignore_obj_list = []
         dimprops = get_dimension_props()
         group_walls = {}
