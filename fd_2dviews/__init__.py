@@ -2326,8 +2326,10 @@ class OPERATOR_genereate_2d_views(bpy.types.Operator):
             # the previous and the current wall need to be 90 or -270 degrees
             if cnctd_wall_angle_check:
                 joints.append((conn[0].obj_bp, conn[1].obj_bp))
-        joints.append((first_wall.obj_bp, last_wall.obj_bp))
-        joints.append((last_wall.obj_bp, first_wall.obj_bp))
+        custom_room = context.scene.fd_roombuilder.room_type == 'CUSTOM'
+        if not custom_room:
+            joints.append((first_wall.obj_bp, last_wall.obj_bp))
+            joints.append((last_wall.obj_bp, first_wall.obj_bp))
         return joints
 
     def unlink_cleats(self, context):
@@ -2875,7 +2877,7 @@ class OPERATOR_genereate_2d_views(bpy.types.Operator):
 
     def execute(self, context):
         if not self.use_single_scene:
-            bpy.ops.fd_scene.clear_2d_views()        
+            bpy.ops.fd_scene.clear_2d_views()
         self.ignore_obj_list = []
         dimprops = get_dimension_props()
         group_walls = {}
@@ -2935,9 +2937,9 @@ class OPERATOR_genereate_2d_views(bpy.types.Operator):
                         walls.append((wall, left_wall))
                         wall_groups[wall.obj_bp.name] = wall_group
                         group_walls[wall_group.name] = wall.obj_bp.name
-                        joints = self.process_connected_walls(context, walls)
-                        cross_section_parts = self.add_wall_joints_to_grp(
-                            context, wall_groups, joints)
+            joints = self.process_connected_walls(context, walls)
+            cross_section_parts = self.add_wall_joints_to_grp(
+                context, wall_groups, joints)
 
         self.clear_unused_linestyles()
         bpy.context.screen.scene = self.main_scene
